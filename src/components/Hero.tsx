@@ -99,8 +99,8 @@ const Hero = () => {
                  ${context.button.paddingX}  ${context.button.paddingY} ${context.button.radius}
                 `}
               style={{
-                backgroundColor: context.button.bg,
-                color: context.button.text,
+                backgroundColor: context.colors.primaryColor,
+                color: context.button.btnTextColor,
               }}
               role='button'
             >
@@ -115,13 +115,22 @@ const Hero = () => {
         <div className='px-4 mx-auto max-w-7xl sm:px-6 lg:px-8'>
           <div className='grid items-center grid-cols-1 gap-12 lg:grid-cols-2'>
             <div>
-              <p className='text-base font-semibold tracking-wider text-blue-600 uppercase'>
+              <p
+                className='text-base font-semibold tracking-wider  uppercase'
+                style={{ color: context?.colors.paragraphColor }}
+              >
                 A social media for learners
               </p>
-              <h1 className='mt-4 text-4xl font-bold text-black lg:mt-8 sm:text-6xl xl:text-8xl'>
+              <h1
+                className={` mt-4  font-bold text-3xl ${context?.mainTitle.fontSize} `}
+                style={{ color: context?.colors.primaryColor }}
+              >
                 Connect & learn from the experts
               </h1>
-              <p className='mt-4 text-base text-black lg:mt-8 sm:text-xl'>
+              <p
+                className='mt-4 text-base  lg:mt-8 sm:text-xl'
+                style={{ color: context?.colors.paragraphColor }}
+              >
                 Grow your career fast with right mentor.
               </p>
 
@@ -134,8 +143,8 @@ const Hero = () => {
                  ${context.button.paddingX}  ${context.button.paddingY} ${context.button.radius}
                 `}
                 style={{
-                  backgroundColor: context.button.bg,
-                  color: context.button.text,
+                  backgroundColor: context.colors.primaryColor,
+                  color: context.button.btnTextColor,
                 }}
                 role='button'
               >
@@ -156,12 +165,15 @@ const Hero = () => {
                 </svg>
               </a>
 
-              <p className='mt-5 text-gray-600'>
+              <p
+                className='mt-5'
+                style={{ color: context?.colors.paragraphColor }}
+              >
                 Already joined us?{' '}
                 <a
                   href='#'
                   title=''
-                  className='text-black transition-all duration-200 hover:underline'
+                  className=' transition-all duration-200 hover:underline'
                 >
                   Log in
                 </a>

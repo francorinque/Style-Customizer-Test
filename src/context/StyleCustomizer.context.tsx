@@ -13,11 +13,21 @@ type ContextProps = {
   card: CardState;
   mainTitle: TitleState;
   title: TitleState;
-  handleColorChange: (property: keyof ColorsState, value: string) => void;
-  handleButtonChange: (property: keyof ButtonState, value: string) => void;
-  handleCardChange: (property: keyof CardState, value: string) => void;
-  handleMainTitleChange: (property: keyof TitleState, value: string) => void;
-  handleTitleChange: (property: keyof TitleState, value: string) => void;
+  handleColorChange: (
+    property: keyof ColorsState
+  ) => (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => void;
+  handleButtonChange: (
+    property: keyof ButtonState
+  ) => (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => void;
+  handleCardChange: (
+    property: keyof CardState
+  ) => (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => void;
+  handleMainTitleChange: (
+    property: keyof TitleState
+  ) => (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => void;
+  handleTitleChange: (
+    property: keyof TitleState
+  ) => (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => void;
 };
 
 const initialColorsState = {

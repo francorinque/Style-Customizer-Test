@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useStyleCustomizerContext } from '../../hooks/useStyleCustomizer';
 
 const inputField = 'flex flex-col gap-2 *:p-1 *:rounded-sm text-slate-950';
@@ -8,12 +9,126 @@ const showme: boolean = import.meta.env.VITE_SHOW_ELEMENT === 'true';
 const StyleCustomizer = () => {
   const context = useStyleCustomizerContext();
 
+  const [position, setPosition] = useState('left-0');
+
+  const handlePositionChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setPosition(event.target.value);
+  };
+
   return (
     showme && (
       <div
-        className=' bg-neutral-800 rounded-md bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 border border-gray-100
-        p-4 fixed left-0 bottom-0 z-10  h-screen  flex flex-col gap-4'
+        className={`
+           bg-gray-400  rounded-md  border border-gray-100
+           p-8 fixed  bottom-0 z-10  h-screen  flex flex-col gap-4 overflow-y-auto ${position}
+          `}
       >
+        <label htmlFor='position' className={inputField}>
+          <span className={spanStyles}>TOOL POSITION</span>
+          <select
+            name='position'
+            id='position'
+            onChange={handlePositionChange}
+            value={position}
+          >
+            <option value='left-0'>Left</option>
+            <option value='right-0'>Right</option>
+          </select>
+        </label>
+        {/* texts */}
+        <label htmlFor='mainTtitleFontSize' className={inputField}>
+          <span className={spanStyles}>Main Title Font Size</span>
+          <select
+            name='mainTitleFontSize'
+            id='mainTitleFontSize'
+            value={context?.mainTitle.fontSize}
+            onChange={context?.handleMainTitleChange('fontSize')}
+          >
+            <option value='lg:text-xl'>xl</option>
+            <option value='lg:text-lg'>lg</option>
+            <option value='lg:text-2xl'>2xl</option>
+            <option value='lg:text-3xl'>3xl</option>
+            <option value='lg:text-4xl'>4xl</option>
+            <option value='lg:text-5xl'>5xl</option>
+            <option value='lg:text-6xl'>6xl</option>
+            <option value='lg:text-7xl'>7xl</option>
+          </select>
+        </label>
+        <label htmlFor='titleFontSize' className={inputField}>
+          <span className={spanStyles}>Title Font Size</span>
+          <select
+            name='titleFontSize'
+            id='titleFontSize'
+            value={context?.title.fontSize}
+            onChange={context?.handleTitleChange('fontSize')}
+          >
+            <option value='lg:text-xl'>xl</option>
+            <option value='lg:text-lg'>lg</option>
+            <option value='lg:text-2xl'>2xl</option>
+            <option value='lg:text-3xl'>3xl</option>
+            <option value='lg:text-4xl'>4xl</option>
+            <option value='lg:text-5xl'>5xl</option>
+            <option value='lg:text-6xl'>6xl</option>
+            <option value='lg:text-7xl'>7xl</option>
+          </select>
+        </label>
+
+        <label htmlFor='primaryColor' className={inputField}>
+          <span className={spanStyles}>Primary Color</span>
+          <input
+            type='color'
+            name='primaryColor'
+            id='primaryColor'
+            value={context?.colors.primaryColor}
+            onChange={context?.handleColorChange('primaryColor')}
+          />
+        </label>
+        <label htmlFor='secondaryColor' className={inputField}>
+          <span className={spanStyles}>Secondary Color</span>
+          <input
+            type='color'
+            name='secondaryColor'
+            id='secondaryColor'
+            value={context?.colors.secondaryColor}
+            onChange={context?.handleColorChange('secondaryColor')}
+          />
+        </label>
+        <label htmlFor='sectionColor' className={inputField}>
+          <span className={spanStyles}>Section Color</span>
+          <input
+            type='color'
+            name='sectionColor'
+            id='sectionColor'
+            value={context?.colors.sectionColor}
+            onChange={context?.handleColorChange('sectionColor')}
+          />
+        </label>
+
+        <label htmlFor='paragraphColor' className={inputField}>
+          <span className={spanStyles}>Paragraph Color</span>
+          <input
+            type='color'
+            name='paragraphColor'
+            id='paragraphColor'
+            value={context?.colors.paragraphColor}
+            onChange={context?.handleColorChange('paragraphColor')}
+          />
+        </label>
+
+        {/* buttons */}
+        <label htmlFor='btnTextColor' className={inputField}>
+          <span className={spanStyles}>Button Text Color</span>
+          <input
+            type='color'
+            name='btnTextColor'
+            id='btnTextColor'
+            onChange={context?.handleButtonChange('btnTextColor')}
+            value={context?.button.btnTextColor}
+          />
+        </label>
+
         <label htmlFor='btnPaddingX' className={inputField}>
           <span className={spanStyles}> Button Padding X</span>
           <select
@@ -79,42 +194,7 @@ const StyleCustomizer = () => {
           </select>
         </label>
 
-        <label htmlFor='btnBgColor' className={inputField}>
-          <span className={spanStyles}> Button Background</span>
-          <input
-            type='color'
-            name='btnBgColor'
-            id='btnBgColor'
-            onChange={context?.handleButtonChange('bg')}
-            value={context?.button?.bg}
-          />
-        </label>
-
-        <label htmlFor='btnTextColor' className={inputField}>
-          <span className={spanStyles}> Button Text Color</span>
-          <input
-            type='color'
-            name='btnTextColor'
-            id='btnTextColor'
-            onChange={context?.handleButtonChange('text')}
-            value={context?.button?.text}
-          />
-        </label>
-
-        <hr className='bg-gray-400 h-[2px]' />
-
         {/* cards */}
-
-        <label htmlFor='cardBgColor' className={inputField}>
-          <span className={spanStyles}> Card Background</span>
-          <input
-            type='color'
-            name='cardBgColor'
-            id='cardBgColor'
-            onChange={context?.handleCardChange('bg')}
-            value={context?.card?.bg}
-          />
-        </label>
 
         <label htmlFor='cardRadius' className={inputField}>
           <span className={spanStyles}> Card Border-Radius</span>

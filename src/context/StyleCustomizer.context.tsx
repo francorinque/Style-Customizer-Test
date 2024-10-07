@@ -1,24 +1,63 @@
-import React, { createContext, useEffect, useState } from 'react';
+import React, {
+  createContext,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useMemo,
+} from 'react';
+import usePersistedState from '../hooks/usePersistedState';
 
 type ContextProps = {
-  button: {
-    bg: string;
-    text: string;
-    radius: string;
-    paddingX: string;
-    paddingY: string;
-  };
+  colors: ColorsState;
+  button: ButtonState;
+  card: CardState;
+  mainTitle: TitleState;
+  title: TitleState;
+  handleColorChange: (
+    property: keyof ColorsState
+  ) => (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => void;
   handleButtonChange: (
-    property: string
+    property: keyof ButtonState
   ) => (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => void;
   handleCardChange: (
-    property: string
+    property: keyof CardState
   ) => (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => void;
-  card: {
-    bg: string;
-    radius: string;
-  };
+  handleMainTitleChange: (
+    property: keyof TitleState
+  ) => (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => void;
+  handleTitleChange: (
+    property: keyof TitleState
+  ) => (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => void;
 };
+
+const initialColorsState = {
+  primaryColor: '#2563eb',
+  secondaryColor: '#10b981',
+  paragraphColor: '#374151',
+  sectionColor: '#f3f4f6',
+};
+
+const initialButtonState = {
+  btnTextColor: '#2039',
+  radius: 'rounded-md',
+  paddingX: 'px-2',
+  paddingY: 'py-2',
+};
+
+const initialCardState = {
+  radius: 'rounded-md',
+};
+
+const initialTitleState = {
+  fontSize: 'text-6xl',
+  fontWeight: 'font-bold',
+};
+
+type ColorsState = typeof initialColorsState;
+type ButtonState = typeof initialButtonState;
+type CardState = typeof initialCardState;
+type TitleState = typeof initialTitleState;
+type State = Record<string, string>;
 
 export const StyleCustomizerContext = createContext<ContextProps | null>(null);
 
@@ -27,34 +66,32 @@ const StyleCustomizerProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const getInitialState = (key: string, defaultValue: string) => {
-    const storedValue = localStorage.getItem(key);
-    return storedValue || defaultValue;
-  };
+  const [colors, setColors] = usePersistedState<ColorsState>(
+    'colors',
+    initialColorsState
+  );
+  const [button, setButton] = usePersistedState<ButtonState>(
+    'button',
+    initialButtonState
+  );
+  const [card, setCard] = usePersistedState<CardState>(
+    'card',
+    initialCardState
+  );
+  const [mainTitle, setMainTitle] = usePersistedState<TitleState>(
+    'mainTitle',
+    initialTitleState
+  );
+  const [title, setTitle] = usePersistedState('title', initialTitleState);
 
-  const [button, setButton] = useState({
-    bg: getInitialState('btnBgColor', '#f97316'),
-    text: getInitialState('btnTextColor', 'text-white'),
-    radius: getInitialState('btnRadius', 'rounded-md'),
-    paddingX: getInitialState('btnPaddingX', 'px-1'),
-    paddingY: getInitialState('btnPaddingY', 'py-1'),
-  });
-
-  const [card, setCard] = useState({
-    bg: getInitialState('cardBgColor', '#f5f5f5'),
-    radius: getInitialState('cardRadius', 'rounded-md'),
-  });
-
-  const handleButtonChange =
-    (property: string) =>
+  const handleChange =
+    <T extends State>(setState: Dispatch<SetStateAction<T>>) =>
+    (property: keyof T) =>
     (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
-      setButton({ ...button, [property]: event.target.value });
-    };
-
-  const handleCardChange =
-    (property: string) =>
-    (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
-      setCard({ ...card, [property]: event.target.value });
+      setState((prevState) => ({
+        ...prevState,
+        [property]: event.target.value,
+      }));
     };
 
   useEffect(() => {
@@ -62,19 +99,47 @@ const StyleCustomizerProvider = ({
     localStorage.setItem('btnPaddingX', button.paddingX);
     localStorage.setItem('btnPaddingY', button.paddingY);
     localStorage.setItem('btnRadius', button.radius);
-    localStorage.setItem('btnBgColor', button.bg);
-    localStorage.setItem('btnTextColor', button.text);
+    localStorage.setItem('btnTextColor', button.btnTextColor);
     // cards
-    localStorage.setItem('cardBgColor', card.bg);
     localStorage.setItem('cardRadius', card.radius);
-  }, [card, button]);
+    // texts
+    localStorage.setItem('mainTitleFontSize', mainTitle.fontSize);
+    localStorage.setItem('mainTitleFontWeight', mainTitle.fontWeight);
+    localStorage.setItem('titleFontSize', title.fontSize);
+    localStorage.setItem('titleFontWeight', title.fontWeight);
+    // colors
+    localStorage.setItem('primaryColor', colors.primaryColor);
+    localStorage.setItem('secondaryColor', colors.secondaryColor);
+    localStorage.setItem('paragraphColor', colors.paragraphColor);
+    localStorage.setItem('sectionColor', colors.sectionColor);
+  }, [card, button, colors, mainTitle, title]);
 
-  const contextValue = {
-    button,
-    handleButtonChange,
-    card,
-    handleCardChange,
-  };
+  const contextValue = useMemo(
+    () => ({
+      colors,
+      button,
+      card,
+      mainTitle,
+      title,
+      handleColorChange: handleChange(setColors),
+      handleButtonChange: handleChange(setButton),
+      handleCardChange: handleChange(setCard),
+      handleMainTitleChange: handleChange(setMainTitle),
+      handleTitleChange: handleChange(setTitle),
+    }),
+    [
+      colors,
+      button,
+      card,
+      mainTitle,
+      title,
+      setColors,
+      setButton,
+      setCard,
+      setMainTitle,
+      setTitle,
+    ]
+  );
 
   return (
     <StyleCustomizerContext.Provider value={contextValue}>
